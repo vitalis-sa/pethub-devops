@@ -241,8 +241,40 @@ A rubrica exige demonstração detalhada do CRUD **com integração ao banco em 
 
 1. **Início**: Mostre o repositório no GitHub e faça um `git clone`.
 2. **Deploy na Azure**: Execute os scripts `01` a `05` ou mostre-os já executados na Cloud Shell, provando que tudo está na Azure via comandos CLI.
-3. **Conexão ao Banco**: Use o DBeaver, SQL Developer ou a própria interface do Oracle conectado ao FQDN do ACI do banco.
-4. **CRUD - Inclusão**: Envie um `POST` no Swagger (ex: criar Consulta). Mostre a tela do banco e rode `SELECT * FROM tb_consulta` provando que inseriu.
-5. **CRUD - Alteração**: Envie um `PUT` alterando o status da consulta. Volte no banco, rode o `SELECT` e mostre o campo alterado.
-6. **CRUD - Exclusão**: Envie um `DELETE` (ou inativação). Volte no banco, rode o `SELECT` e mostre a mudança.
-7. **Integração**: Deixe claro na sua fala (com áudio limpo, sem legendas apenas) que o Swagger chamou o ACI do App, que conectou no ACI do Banco e gravou lá.
+3. **Conexão ao Banco na Nuvem (via CLI)**: Para comprovar que está acessando o banco em nuvem, você pode usar o DBeaver ou acessar o `sqlplus` direto por dentro do container ACI usando o comando:
+   ```bash
+   az container exec --resource-group rg-rm566234-challenge-sprint3 --name rm566234-aci-db --exec-command "bash -c 'sqlplus pethub/SUA_SENHA_AQUI@//localhost:1521/XEPDB1'"
+   ```
+   *(Substitua `SUA_SENHA_AQUI` pela senha que você colocou no `.env`)*
+
+4. **Prepare a Visualização (no SQLPlus)**: Para as tabelas não ficarem bagunçadas no terminal, rode formatações básicas no sqlplus antes dos SELECTs:
+   ```sql
+   SET LINESIZE 200;
+   SET PAGESIZE 100;
+   COLUMN NOME FORMAT A15;
+   COLUMN RACA FORMAT A15;
+   COLUMN MOTIVO FORMAT A20;
+   COLUMN TIPO_CONSULTA FORMAT A15;
+   ```
+
+5. **CRUD - Listagem Inicial**:
+   - Vá no Swagger, faça Login para pegar o Token e chame o `GET /api/pets`.
+   - No SQLPlus, rode: `SELECT ID_PET, NOME, RACA FROM TB_PET;` (Mostre que a tabela só tem os dados de seed).
+
+6. **CRUD - Inclusão (POST)**:
+   - Envie um `POST /api/pets` no Swagger criando um novo pet.
+   - No SQLPlus, rode de novo: `SELECT ID_PET, NOME, RACA FROM TB_PET;` e prove que a nova linha apareceu.
+
+7. **CRUD - Alteração (PUT)**:
+   - Envie um `PUT /api/pets/{id}` alterando a raça ou nome do pet recém-criado.
+   - No SQLPlus, rode de novo o SELECT e aponte na tela que o campo mudou em tempo real.
+
+8. **CRUD - Exclusão (DELETE)**:
+   - Envie um `DELETE /api/pets/{id}` deletando o pet.
+   - No SQLPlus, rode de novo o SELECT e comprove que o registro sumiu do banco da Azure.
+
+9. **Repita para Consultas (Opcional, mas recomendado para garantir)**:
+   - Faça um fluxo similar com a tabela `TB_CONSULTA` para provar relacionamento.
+   - Exemplo de SELECT para consultas: `SELECT ID_CONSULTA, TIPO_CONSULTA, MOTIVO, DATA_CONSULTA FROM TB_CONSULTA;`
+   
+10. **Conclusão**: Reforce em áudio que o Swagger (Container App) se comunicou perfeitamente com o Container Banco pela rede da Azure!
