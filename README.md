@@ -174,6 +174,30 @@ bash ./azure/99-cleanup.sh
 
 ---
 
+## 🐳 Comandos Docker Utilizados (Requisito 8.4)
+
+Os scripts Bash automatizam o processo, mas os comandos exatos utilizados nos bastidores para compilar, testar e subir as imagens são:
+
+**Build das imagens:**
+```bash
+docker build -t rm566234-pethub-app:v1 .
+docker build -t rm566234-pethub-oracle:v1 ./database
+```
+
+**Execução local (Docker Compose):**
+```bash
+docker compose up -d --build
+docker compose down -v
+```
+
+**Tag e Push para o Azure Container Registry:**
+```bash
+docker tag rm566234-pethub-app:v1 acrrm566234challenge.azurecr.io/rm566234-pethub-app:v1
+docker push acrrm566234challenge.azurecr.io/rm566234-pethub-app:v1
+```
+
+---
+
 ## 🗺️ Rotas da API (CRUD)
 
 O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas principais para demonstração no vídeo são **Pets** e **Consultas** (relacionadas entre si):
@@ -208,3 +232,17 @@ O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas
 - Todas as credenciais são injetadas via variáveis de ambiente (`.env` → ignorado pelo Git).
 - Os templates YAML do ACI usam `secureValue` para senhas — não aparecem em `az container show`.
 - O container do app roda como `springuser` (uid 1001), **sem privilégio administrativo**.
+
+---
+
+## 🎥 Roteiro Obrigatório para o Vídeo (Dicas para nota máxima)
+
+A rubrica exige demonstração detalhada do CRUD **com integração ao banco em nuvem**. Siga este roteiro ao gravar:
+
+1. **Início**: Mostre o repositório no GitHub e faça um `git clone`.
+2. **Deploy na Azure**: Execute os scripts `01` a `05` ou mostre-os já executados na Cloud Shell, provando que tudo está na Azure via comandos CLI.
+3. **Conexão ao Banco**: Use o DBeaver, SQL Developer ou a própria interface do Oracle conectado ao FQDN do ACI do banco.
+4. **CRUD - Inclusão**: Envie um `POST` no Swagger (ex: criar Consulta). Mostre a tela do banco e rode `SELECT * FROM tb_consulta` provando que inseriu.
+5. **CRUD - Alteração**: Envie um `PUT` alterando o status da consulta. Volte no banco, rode o `SELECT` e mostre o campo alterado.
+6. **CRUD - Exclusão**: Envie um `DELETE` (ou inativação). Volte no banco, rode o `SELECT` e mostre a mudança.
+7. **Integração**: Deixe claro na sua fala (com áudio limpo, sem legendas apenas) que o Swagger chamou o ACI do App, que conectou no ACI do Banco e gravou lá.
