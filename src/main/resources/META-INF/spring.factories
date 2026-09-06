@@ -1,0 +1,4 @@
+# Carrega o arquivo .env antes de qualquer resolucao de placeholder, para que a
+# aplicacao suba pela IDE, por mvn spring-boot:run e pelo jar sem exigir que
+# alguem exporte as variaveis manualmente antes.
+org.springframework.boot.EnvironmentPostProcessor=fiap.pethub.config.ConfiguracaoDotenv

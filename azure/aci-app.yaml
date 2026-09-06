@@ -1,0 +1,64 @@
+# =====================================================================
+# ACI da APLICACAO - PetHub API (Java 21 / Spring Boot)
+# Challenge FIAP Sprint 3 - DevOps Tools & Cloud Computing | Grupo Vitalis
+#
+# TEMPLATE. Os campos __ASSIM__ sao preenchidos em tempo de execucao
+# pelo script 05-aci-app.sh. Nenhuma credencial e commitada aqui.
+#
+# O app alcanca o banco pelo FQDN publico do ACI do banco
+# (__DNS_DB__.__LOCATION__.azurecontainer.io:1521/XEPDB1), ou seja,
+# dois ACIs distintos conversando entre si -- conforme o enunciado.
+#
+# O container roda como springuser (uid 1001), definido no Dockerfile:
+# nao ha privilegio administrativo.
+# =====================================================================
+apiVersion: "2021-10-01"
+location: __LOCATION__
+name: __ACI_APP__
+type: Microsoft.ContainerInstance/containerGroups
+
+properties:
+  osType: Linux
+  restartPolicy: Always
+
+  imageRegistryCredentials:
+    - server: __ACR_SERVER__
+      username: __ACR_USERNAME__
+      password: __ACR_PASSWORD__
+
+  ipAddress:
+    type: Public
+    dnsNameLabel: __DNS_APP__
+    ports:
+      - protocol: tcp
+        port: 8080
+
+  containers:
+    - name: pethub-app
+      properties:
+        image: __ACR_SERVER__/__APP_IMAGE__:__IMAGE_TAG__
+        ports:
+          - port: 8080
+        resources:
+          requests:
+            cpu: __APP_CPU__
+            memoryInGB: __APP_MEMORY__
+        environmentVariables:
+          - name: DB_URL
+            value: jdbc:oracle:thin:@//__DB_FQDN__:1521/XEPDB1
+          - name: DB_USER
+            value: __APP_DB_USER__
+          - name: DB_PASSWORD
+            secureValue: __APP_DB_PASSWORD__
+          # O schema vem do DDL embutido na imagem do banco;
+          # "validate" faz o app recusar subir se houver divergencia.
+          - name: DB_DDL_AUTO
+            value: validate
+          - name: SHOW_SQL
+            value: "true"
+          - name: DB_POOL_MAX
+            value: "10"
+          - name: DB_POOL_MIN
+            value: "2"
+          - name: JWT_SECRET
+            secureValue: __JWT_SECRET__

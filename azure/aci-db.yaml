@@ -1,0 +1,70 @@
+# =====================================================================
+# ACI do BANCO DE DADOS - Oracle Database XE 21c
+# Challenge FIAP Sprint 3 - DevOps Tools & Cloud Computing | Grupo Vitalis
+#
+# TEMPLATE. Os campos __ASSIM__ sao preenchidos em tempo de execucao
+# pelo script 04-aci-db.sh, que busca os valores no Azure e no .env.
+# Nenhuma credencial e commitada neste arquivo.
+#
+# Persistencia: o volume "oradata" e o File Share da Conta de
+# Armazenamento, montado em /opt/oracle/oradata. Os datafiles do Oracle
+# ficam la, entao destruir e recriar este ACI nao perde os dados.
+# =====================================================================
+apiVersion: "2021-10-01"
+location: __LOCATION__
+name: __ACI_DB__
+type: Microsoft.ContainerInstance/containerGroups
+
+properties:
+  osType: Linux
+
+  # NAO usar "Always" aqui. Se o Oracle falha na subida, o ACI reinicia o
+  # container em loop: cada tentativa deixa a SGA anterior no /dev/shm do
+  # sandbox (a seguinte morre com ORA-01081, "cannot start already-running
+  # ORACLE"), o "az container logs" passa a devolver None porque o container
+  # corrente esta em Waiting/CrashLoopBackOff, e a causa real fica invisivel.
+  # Com "Never" o container para em Terminated e o log inteiro fica legivel.
+  restartPolicy: Never
+
+  # Autenticacao para puxar a imagem privada do ACR
+  imageRegistryCredentials:
+    - server: __ACR_SERVER__
+      username: __ACR_USERNAME__
+      password: __ACR_PASSWORD__
+
+  ipAddress:
+    type: Public
+    dnsNameLabel: __DNS_DB__
+    ports:
+      - protocol: tcp
+        port: 1521
+
+  containers:
+    - name: oracle-db
+      properties:
+        image: __ACR_SERVER__/__DB_IMAGE__:__IMAGE_TAG__
+        ports:
+          - port: 1521
+        resources:
+          requests:
+            cpu: __DB_CPU__
+            memoryInGB: __DB_MEMORY__
+        environmentVariables:
+          # Senha do SYS/SYSTEM - secureValue nao aparece em "az container show"
+          - name: ORACLE_PASSWORD
+            secureValue: __ORACLE_PWD__
+          # Usuario da aplicacao, criado automaticamente no PDB XEPDB1
+          - name: APP_USER
+            value: __APP_DB_USER__
+          - name: APP_USER_PASSWORD
+            secureValue: __APP_DB_PASSWORD__
+        volumeMounts:
+          - name: oradata
+            mountPath: /opt/oracle/oradata
+
+  volumes:
+    - name: oradata
+      azureFile:
+        shareName: __FILE_SHARE__
+        storageAccountName: __STORAGE_ACCOUNT__
+        storageAccountKey: __STORAGE_KEY__
