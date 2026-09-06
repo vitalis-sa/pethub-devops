@@ -115,7 +115,7 @@ docker compose logs -f
 
 ### 4. Deploy na Azure (ACR + ACI)
 
-Execute os scripts na ordem. Cada um mostra o próximo passo ao terminar:
+Execute os scripts na ordem. Execute "az login" caso necessário. Cada um mostra o próximo passo ao terminar:
 
 ```bash
 # 1. Criar Resource Group + Azure Container Registry
