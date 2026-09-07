@@ -3,8 +3,10 @@
 -- Checkpoint FIAP - Imagem e Containers em Nuvem
 --
 -- Cria o minimo necessario para a demonstracao do CRUD: uma unidade,
--- um veterinario e um responsavel (com endereco e contato).
--- As demais tabelas sao populadas ao vivo, via API, durante o video.
+-- um veterinario, um responsavel (com endereco e contato) e as duas
+-- tabelas relacionadas do core -- tb_pet e tb_consulta -- com duas linhas
+-- cada. Assim o primeiro SELECT do roteiro do video ja devolve dados, e a
+-- inclusao feita ao vivo aparece por contraste com a carga existente.
 --
 -- As senhas sao hashes BCrypt reais, gerados pela mesma classe que a
 -- aplicacao usa (fiap.pethub.config.PasswordUtil / BCryptPasswordEncoder).
@@ -65,6 +67,48 @@ VALUES
      (SELECT id FROM tb_responsavel WHERE cpf = '11122233344'),
      'CELULAR', '11977776666', 1);
 
+-- ---------------------------------------------------------------------
+-- Pets do responsavel (core da solucao)
+-- ---------------------------------------------------------------------
+INSERT INTO tb_pet
+    (id, nome, especie, raca, idade, peso, genero,
+     responsavel_id, veterinario_responsavel_id)
+VALUES
+    (sq_pet.NEXTVAL, 'Mia', 'Felino', 'Siames', 3, 4.2, 'Femea',
+     (SELECT id FROM tb_responsavel WHERE cpf = '11122233344'),
+     (SELECT id FROM tb_veterinario WHERE crmv = 'CRMV-SP-12345'));
+
+INSERT INTO tb_pet
+    (id, nome, especie, raca, idade, peso, genero,
+     responsavel_id, veterinario_responsavel_id)
+VALUES
+    (sq_pet.NEXTVAL, 'Thor', 'Canino', 'Golden Retriever', 5, 31.5, 'Macho',
+     (SELECT id FROM tb_responsavel WHERE cpf = '11122233344'),
+     (SELECT id FROM tb_veterinario WHERE crmv = 'CRMV-SP-12345'));
+
+-- ---------------------------------------------------------------------
+-- Consultas vinculadas aos pets (segunda tabela do CRUD relacionado)
+-- ---------------------------------------------------------------------
+INSERT INTO tb_consulta
+    (id, pet_id, veterinario_id, unidade_id, data_hora, tipo, status, observacoes)
+VALUES
+    (sq_consulta.NEXTVAL,
+     (SELECT id FROM tb_pet WHERE nome = 'Mia'),
+     (SELECT id FROM tb_veterinario WHERE crmv = 'CRMV-SP-12345'),
+     (SELECT id FROM tb_unidade_veterinario WHERE nome = 'PetHub Clinica Paulista'),
+     SYSTIMESTAMP - INTERVAL '7' DAY, 'PRESENCIAL', 'REALIZADA',
+     'Check-up anual. Ingestao de agua abaixo da meta; wearable de hidratacao instalado.');
+
+INSERT INTO tb_consulta
+    (id, pet_id, veterinario_id, unidade_id, data_hora, tipo, status, observacoes)
+VALUES
+    (sq_consulta.NEXTVAL,
+     (SELECT id FROM tb_pet WHERE nome = 'Thor'),
+     (SELECT id FROM tb_veterinario WHERE crmv = 'CRMV-SP-12345'),
+     NULL,
+     SYSTIMESTAMP + INTERVAL '3' DAY, 'TELECONSULTA', 'AGENDADA',
+     'Retorno para avaliar claudicacao na pata traseira esquerda.');
+
 COMMIT;
 
 -- ---------------------------------------------------------------------
@@ -73,5 +117,7 @@ COMMIT;
 SELECT 'unidades='       || COUNT(*) AS carga FROM tb_unidade_veterinario;
 SELECT 'veterinarios='   || COUNT(*) AS carga FROM tb_veterinario;
 SELECT 'responsaveis='   || COUNT(*) AS carga FROM tb_responsavel;
+SELECT 'pets='           || COUNT(*) AS carga FROM tb_pet;
+SELECT 'consultas='      || COUNT(*) AS carga FROM tb_consulta;
 
 EXIT;

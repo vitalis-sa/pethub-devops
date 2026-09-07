@@ -16,7 +16,7 @@ Este repositório contém a **entrega de DevOps Tools & Cloud Computing — Spri
 | RM565154 | Pedro Chasci Puga | 2TDSPV |
 | RM561342 | Lucas Figueiredo Vieira | 2TDSPV |
 
-- **Repositório GitHub**: *(preencher após publicar)*
+- **Repositório GitHub**: https://github.com/vitalis-sa/pethub-devops
 - **Vídeo no YouTube**: *(preencher após gravar)*
 
 ---
@@ -161,7 +161,8 @@ bash ./azure/99-cleanup.sh
 | [`Dockerfile`](./Dockerfile) | Imagem do app. Multi-stage build (Maven → JRE Alpine). **Usuário não-root** (`springuser`, uid 1001). |
 | [`database/Dockerfile`](./database/Dockerfile) | Imagem do banco. Oracle XE 21c com DDL e seed embutidos. Usuário `oracle` (uid 54321). |
 | [`docker-compose.yml`](./docker-compose.yml) | Orquestração local: app + banco com healthcheck e volume persistente. |
-| [`script_bd.sql`](./script_bd.sql) | DDL completo das 13 tabelas (requisito da rubrica). |
+| [`script_bd.sql`](./script_bd.sql) | DDL completo: 13 tabelas, 13 sequences, 20 chaves estrangeiras, índices e **comentários em todas as tabelas e colunas** (requisito da rubrica). |
+| [`database/init/02-seed.sql`](./database/init/02-seed.sql) | Carga inicial, incluindo 2 pets e 2 consultas vinculadas — as duas tabelas relacionadas do CRUD demonstrado no vídeo. |
 | [`azure/00-vars.sh`](./azure/00-vars.sh) | Variáveis centralizadas (nomes de recursos, sem segredos). |
 | [`azure/01-acr.sh`](./azure/01-acr.sh) | Cria Resource Group e ACR via Azure CLI. |
 | [`azure/02-build-push.sh`](./azure/02-build-push.sh) | Build das 2 imagens Docker + push para o ACR. |
@@ -171,6 +172,8 @@ bash ./azure/99-cleanup.sh
 | [`azure/06-status.sh`](./azure/06-status.sh) | Resumo de todos os recursos provisionados. |
 | [`azure/99-cleanup.sh`](./azure/99-cleanup.sh) | Destrói todo o Resource Group (pós-vídeo). |
 | [`.env.example`](./.env.example) | Exemplo de configuração. **Nenhuma credencial real no código.** |
+| [`docs/entrega-devops-sprint3.pdf`](./docs/entrega-devops-sprint3.pdf) | PDF da entrega: integrantes com RM, link do repositório e link do vídeo. |
+| [`docs/folha-de-rosto.html`](./docs/folha-de-rosto.html) | Fonte do PDF acima. Regerar após publicar o vídeo (comando no topo do arquivo). |
 
 ---
 
@@ -253,17 +256,19 @@ O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas
    SET PAGESIZE 100;
    COLUMN NOME FORMAT A15;
    COLUMN RACA FORMAT A15;
-   COLUMN MOTIVO FORMAT A20;
-   COLUMN TIPO_CONSULTA FORMAT A15;
+   COLUMN ESPECIE FORMAT A10;
+   COLUMN TIPO FORMAT A14;
+   COLUMN STATUS FORMAT A12;
+   COLUMN OBSERVACOES FORMAT A40;
    ```
 
 4. **Teste de Leitura Inicial (GET)**:
    - Gere o token JWT através da rota de Login no Swagger e realize um `GET /api/pets`.
-   - No SQLPlus, confirme os dados retornados executando: `SELECT ID_PET, NOME, RACA FROM TB_PET;`.
+   - No SQLPlus, confirme os dados retornados executando: `SELECT id, nome, especie, raca FROM tb_pet ORDER BY id;`.
 
 5. **Teste de Inclusão (POST)**:
    - Envie um `POST /api/pets` no Swagger com os dados de um novo pet.
-   - Valide no SQLPlus rodando novamente: `SELECT ID_PET, NOME, RACA FROM TB_PET;` para observar o novo registro inserido na tabela.
+   - Valide no SQLPlus rodando novamente: `SELECT id, nome, especie, raca FROM tb_pet ORDER BY id;` para observar o novo registro inserido na tabela.
 
 6. **Teste de Alteração (PUT)**:
    - Envie um `PUT /api/pets/{id}` para alterar informações do pet criado.
@@ -275,6 +280,6 @@ O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas
 
 8. **Testes Relacionais (Consultas)**:
    - Siga a mesma lógica na tabela `TB_CONSULTA` (vinculada à `TB_PET`).
-   - Você pode validá-la com o comando: `SELECT ID_CONSULTA, TIPO_CONSULTA, MOTIVO, DATA_CONSULTA FROM TB_CONSULTA;`.
+   - Você pode validá-la com o comando: `SELECT id, pet_id, tipo, status, observacoes, data_hora FROM tb_consulta ORDER BY id;`.
    
 Este fluxo garante a demonstração clara de que a aplicação Containerizada e o Banco de Dados em Nuvem (ambos ACIs) comunicam-se adequadamente dentro da rede virtualizada da Azure.

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Entrega DevOps Tools &amp; Cloud Computing — Sprint 3</title>
+<!--
+  Folha de rosto da entrega de DevOps Tools & Cloud Computing (Sprint 3).
+
+  A rubrica limita o PDF a tres coisas: nome completo e RM dos integrantes,
+  link do repositorio e link do video. "Nao pode ter mais nada no PDF, todo
+  o resto e no GitHub." Por isso esta pagina nao traz descricao, arquitetura
+  nem instrucoes -- tudo isso vive no README do repositorio.
+
+  Para gerar o PDF:
+    msedge --headless --disable-gpu --no-pdf-header-footer \
+           --print-to-pdf="docs/entrega-devops-sprint3.pdf" \
+           "file:///CAMINHO/docs/folha-de-rosto.html"
+-->
+<style>
+  @page { size: A4; margin: 22mm 20mm; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: #1e2d40;
+    background: #ffffff;
+    line-height: 1.55;
+    font-size: 12pt;
+  }
+
+  .folha { display: flex; flex-direction: column; gap: 26px; }
+
+  header { border-bottom: 2px solid #02a383; padding-bottom: 14px; }
+
+  .disciplina {
+    font-size: 10.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #02a383;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  h1 { font-size: 19pt; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+
+  .sub { font-size: 11pt; color: #4a5c70; margin: 6px 0 0; }
+
+  h2 {
+    font-size: 9.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6f8195;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+
+  table { border-collapse: collapse; width: 100%; font-size: 11.5pt; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d5e0e2; }
+  th {
+    font-size: 9pt; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #6f8195; font-weight: 700; border-bottom: 1.5px solid #b9c8cb;
+  }
+  td.rm { font-family: "Consolas", "Courier New", monospace; white-space: nowrap; width: 22%; }
+  td.turma { width: 16%; color: #4a5c70; }
+
+  .links { display: flex; flex-direction: column; gap: 14px; }
+
+  .link-item { display: flex; flex-direction: column; gap: 3px; }
+  .link-rotulo { font-size: 9.5pt; text-transform: uppercase; letter-spacing: 0.09em; color: #6f8195; font-weight: 700; }
+  .link-valor { font-family: "Consolas", "Courier New", monospace; font-size: 11pt; word-break: break-all; color: #1e2d40; }
+
+  .pendente { color: #c8362c; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="folha">
+
+    <header>
+      <p class="disciplina">DevOps Tools &amp; Cloud Computing</p>
+      <h1>Challenge 2026 — Sprint 3</h1>
+      <p class="sub">Grupo Vitalis · 2TDSPV · FIAP</p>
+    </header>
+
+    <section>
+      <h2>Integrantes</h2>
+      <table>
+        <thead>
+          <tr><th>RM</th><th>Nome completo</th><th>Turma</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="rm">RM561489</td><td>Ana Flávia Camelo</td><td class="turma">2TDSPV</td></tr>
+          <tr><td class="rm">RM562745</td><td>Gustavo Kenji Terada</td><td class="turma">2TDSPV</td></tr>
+          <tr><td class="rm">RM566234</td><td>João Guilherme Carvalho Novaes</td><td class="turma">2TDSPV</td></tr>
+          <tr><td class="rm">RM565154</td><td>Pedro Chasci Puga</td><td class="turma">2TDSPV</td></tr>
+          <tr><td class="rm">RM561342</td><td>Lucas Figueiredo Vieira</td><td class="turma">2TDSPV</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Links da entrega</h2>
+      <div class="links">
+        <div class="link-item">
+          <span class="link-rotulo">Repositório no GitHub</span>
+          <span class="link-valor">https://github.com/vitalis-sa/pethub-devops</span>
+        </div>
+        <div class="link-item">
+          <span class="link-rotulo">Vídeo no YouTube</span>
+          <span class="link-valor pendente">PREENCHER APÓS PUBLICAR O VÍDEO</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

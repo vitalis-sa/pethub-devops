@@ -357,5 +357,169 @@ CREATE INDEX ix_pedmed_pet           ON tb_pedido_medico (pet_id);
 CREATE INDEX ix_leitura_pet          ON tb_leitura_wearable (pet_id);
 CREATE INDEX ix_lembrete_responsavel ON tb_lembrete (responsavel_id);
 
+-- =====================================================================
+-- COMENTARIOS DE TABELAS E COLUNAS
+--
+-- Documentacao do schema dentro do proprio banco: fica consultavel por
+-- USER_TAB_COMMENTS e USER_COL_COMMENTS, sem depender deste arquivo.
+-- =====================================================================
+
+-- --- Responsavel (tutor do animal) -----------------------------------
+COMMENT ON TABLE  tb_responsavel                  IS 'Tutor responsavel pelo animal. Autentica no app mobile com perfil RESPONSAVEL.';
+COMMENT ON COLUMN tb_responsavel.id               IS 'Chave primaria. Gerada por sq_responsavel.';
+COMMENT ON COLUMN tb_responsavel.nome             IS 'Nome completo do tutor.';
+COMMENT ON COLUMN tb_responsavel.cpf              IS 'CPF somente digitos, 11 posicoes. Unico: identifica o tutor no cadastro.';
+COMMENT ON COLUMN tb_responsavel.email            IS 'E-mail de login. Unico em todo o sistema, incluindo veterinarios.';
+COMMENT ON COLUMN tb_responsavel.senha            IS 'Hash BCrypt da senha. Nunca armazena texto puro.';
+COMMENT ON COLUMN tb_responsavel.ativo            IS 'Cadastro ativo: 1 permite login, 0 bloqueia o acesso imediatamente.';
+COMMENT ON COLUMN tb_responsavel.created_at       IS 'Data e hora do cadastro.';
+
+COMMENT ON TABLE  tb_responsavel_endereco         IS 'Enderecos do tutor. Um tutor pode ter varios; um deles e o principal.';
+COMMENT ON COLUMN tb_responsavel_endereco.id      IS 'Chave primaria. Gerada por sq_responsavel_endereco.';
+COMMENT ON COLUMN tb_responsavel_endereco.responsavel_id IS 'FK para tb_responsavel: dono do endereco.';
+COMMENT ON COLUMN tb_responsavel_endereco.logradouro     IS 'Nome da rua, avenida ou praca.';
+COMMENT ON COLUMN tb_responsavel_endereco.numero         IS 'Numero do imovel.';
+COMMENT ON COLUMN tb_responsavel_endereco.complemento    IS 'Apartamento, bloco ou referencia. Opcional.';
+COMMENT ON COLUMN tb_responsavel_endereco.bairro         IS 'Bairro.';
+COMMENT ON COLUMN tb_responsavel_endereco.cidade         IS 'Municipio.';
+COMMENT ON COLUMN tb_responsavel_endereco.estado         IS 'Sigla da unidade federativa, 2 letras.';
+COMMENT ON COLUMN tb_responsavel_endereco.cep            IS 'CEP somente digitos, 8 posicoes.';
+COMMENT ON COLUMN tb_responsavel_endereco.principal      IS 'Endereco preferencial do tutor: 1 sim, 0 nao.';
+
+COMMENT ON TABLE  tb_responsavel_contato          IS 'Telefones de contato do tutor, usados pelos lembretes.';
+COMMENT ON COLUMN tb_responsavel_contato.id       IS 'Chave primaria. Gerada por sq_responsavel_contato.';
+COMMENT ON COLUMN tb_responsavel_contato.responsavel_id IS 'FK para tb_responsavel: dono do contato.';
+COMMENT ON COLUMN tb_responsavel_contato.tipo     IS 'Natureza do telefone: CELULAR, RESIDENCIAL ou COMERCIAL.';
+COMMENT ON COLUMN tb_responsavel_contato.telefone IS 'Numero somente digitos, com DDD.';
+COMMENT ON COLUMN tb_responsavel_contato.principal IS 'Contato preferencial do tutor: 1 sim, 0 nao.';
+
+-- --- Clinica e corpo clinico -----------------------------------------
+COMMENT ON TABLE  tb_unidade_veterinario          IS 'Unidade fisica da clinica onde as consultas presenciais acontecem.';
+COMMENT ON COLUMN tb_unidade_veterinario.id       IS 'Chave primaria. Gerada por sq_unidade_veterinario.';
+COMMENT ON COLUMN tb_unidade_veterinario.nome     IS 'Nome comercial da unidade.';
+COMMENT ON COLUMN tb_unidade_veterinario.logradouro IS 'Nome da rua ou avenida da unidade.';
+COMMENT ON COLUMN tb_unidade_veterinario.numero   IS 'Numero do imovel.';
+COMMENT ON COLUMN tb_unidade_veterinario.bairro   IS 'Bairro.';
+COMMENT ON COLUMN tb_unidade_veterinario.cidade   IS 'Municipio.';
+COMMENT ON COLUMN tb_unidade_veterinario.estado   IS 'Sigla da unidade federativa, 2 letras.';
+COMMENT ON COLUMN tb_unidade_veterinario.cep      IS 'CEP somente digitos, 8 posicoes.';
+
+COMMENT ON TABLE  tb_veterinario                  IS 'Veterinario do corpo clinico. Autentica com perfil VETERINARIO e e quem produz o prontuario.';
+COMMENT ON COLUMN tb_veterinario.id               IS 'Chave primaria. Gerada por sq_veterinario.';
+COMMENT ON COLUMN tb_veterinario.nome             IS 'Nome completo do veterinario.';
+COMMENT ON COLUMN tb_veterinario.crmv             IS 'Registro no Conselho Regional de Medicina Veterinaria. Unico.';
+COMMENT ON COLUMN tb_veterinario.email            IS 'E-mail de login. Unico em todo o sistema, incluindo tutores.';
+COMMENT ON COLUMN tb_veterinario.senha            IS 'Hash BCrypt da senha. Nunca armazena texto puro.';
+COMMENT ON COLUMN tb_veterinario.telefone         IS 'Telefone de contato profissional.';
+COMMENT ON COLUMN tb_veterinario.especialidade    IS 'Area de atuacao, por exemplo Clinica Geral ou Dermatologia.';
+COMMENT ON COLUMN tb_veterinario.ativo            IS 'Vinculo ativo: 1 permite login, 0 desliga o acesso imediatamente.';
+COMMENT ON COLUMN tb_veterinario.unidade_id       IS 'FK para tb_unidade_veterinario: unidade de lotacao.';
+
+-- --- Nucleo do dominio: o animal --------------------------------------
+COMMENT ON TABLE  tb_pet                          IS 'Animal atendido pela plataforma. Tabela central: todo registro clinico aponta para ela.';
+COMMENT ON COLUMN tb_pet.id                       IS 'Chave primaria. Gerada por sq_pet.';
+COMMENT ON COLUMN tb_pet.nome                     IS 'Nome do animal.';
+COMMENT ON COLUMN tb_pet.especie                  IS 'Especie do animal, por exemplo Felino ou Canino.';
+COMMENT ON COLUMN tb_pet.raca                     IS 'Raca do animal. Opcional para animais sem raca definida.';
+COMMENT ON COLUMN tb_pet.idade                    IS 'Idade em anos completos.';
+COMMENT ON COLUMN tb_pet.peso                     IS 'Peso em quilogramas. Base do calculo da meta diaria de hidratacao.';
+COMMENT ON COLUMN tb_pet.genero                   IS 'Sexo do animal: Macho ou Femea.';
+COMMENT ON COLUMN tb_pet.responsavel_id           IS 'FK para tb_responsavel: tutor dono do animal. Delimita o que o tutor enxerga na API.';
+COMMENT ON COLUMN tb_pet.veterinario_responsavel_id IS 'FK para tb_veterinario: veterinario de referencia do animal. Opcional.';
+
+-- --- Atendimento e prontuario ----------------------------------------
+COMMENT ON TABLE  tb_consulta                     IS 'Atendimento veterinario, presencial ou por teleconsulta. Raiz do prontuario daquele encontro.';
+COMMENT ON COLUMN tb_consulta.id                  IS 'Chave primaria. Gerada por sq_consulta.';
+COMMENT ON COLUMN tb_consulta.pet_id              IS 'FK para tb_pet: animal atendido.';
+COMMENT ON COLUMN tb_consulta.veterinario_id      IS 'FK para tb_veterinario: profissional responsavel pelo atendimento.';
+COMMENT ON COLUMN tb_consulta.unidade_id          IS 'FK para tb_unidade_veterinario: unidade do atendimento. Nulo em teleconsulta.';
+COMMENT ON COLUMN tb_consulta.data_hora           IS 'Data e hora do atendimento.';
+COMMENT ON COLUMN tb_consulta.tipo                IS 'Modalidade: PRESENCIAL ou TELECONSULTA.';
+COMMENT ON COLUMN tb_consulta.status              IS 'Situacao: AGENDADA, REALIZADA ou CANCELADA.';
+COMMENT ON COLUMN tb_consulta.observacoes         IS 'Anotacoes livres do veterinario sobre o atendimento.';
+
+COMMENT ON TABLE  tb_diagnostico                  IS 'Diagnostico da consulta, com os sintomas coletados e a predicao assistida por IA.';
+COMMENT ON COLUMN tb_diagnostico.id               IS 'Chave primaria. Gerada por sq_diagnostico.';
+COMMENT ON COLUMN tb_diagnostico.consulta_id      IS 'FK para tb_consulta: atendimento que originou o diagnostico.';
+COMMENT ON COLUMN tb_diagnostico.pet_id           IS 'FK para tb_pet: animal diagnosticado.';
+COMMENT ON COLUMN tb_diagnostico.data             IS 'Data e hora do registro do diagnostico.';
+COMMENT ON COLUMN tb_diagnostico.sintoma1         IS 'Sintoma principal relatado.';
+COMMENT ON COLUMN tb_diagnostico.sintoma2         IS 'Segundo sintoma relatado.';
+COMMENT ON COLUMN tb_diagnostico.sintoma3         IS 'Terceiro sintoma relatado.';
+COMMENT ON COLUMN tb_diagnostico.sintoma4         IS 'Quarto sintoma relatado.';
+COMMENT ON COLUMN tb_diagnostico.duracao_sintomas IS 'Ha quanto tempo os sintomas se manifestam.';
+COMMENT ON COLUMN tb_diagnostico.perda_apetite    IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.vomito           IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.diarreia         IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.tosse            IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.dificuldade_respiratoria IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.secrecao_nasal   IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.secrecao_ocular  IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.lesoes_pele      IS 'Sinal clinico presente: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.claudicacao      IS 'Manqueira ao andar: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_diagnostico.temperatura_corporal IS 'Temperatura aferida em graus Celsius.';
+COMMENT ON COLUMN tb_diagnostico.frequencia_cardiaca  IS 'Batimentos por minuto.';
+COMMENT ON COLUMN tb_diagnostico.doenca_predita   IS 'Doenca sugerida pelo modelo de machine learning.';
+COMMENT ON COLUMN tb_diagnostico.confianca_predicao   IS 'Confianca da predicao, de 0 a 1.';
+COMMENT ON COLUMN tb_diagnostico.analise_gen_ai   IS 'Texto explicativo gerado por IA, confirmado pelo veterinario antes de gravar.';
+
+COMMENT ON TABLE  tb_exame                        IS 'Exame solicitado ou realizado durante a consulta.';
+COMMENT ON COLUMN tb_exame.id                     IS 'Chave primaria. Gerada por sq_exame.';
+COMMENT ON COLUMN tb_exame.consulta_id            IS 'FK para tb_consulta: atendimento que solicitou o exame.';
+COMMENT ON COLUMN tb_exame.pet_id                 IS 'FK para tb_pet: animal examinado.';
+COMMENT ON COLUMN tb_exame.tipo                   IS 'Tipo do exame, por exemplo Hemograma ou Raio-X.';
+COMMENT ON COLUMN tb_exame.data                   IS 'Data de realizacao.';
+COMMENT ON COLUMN tb_exame.resultado              IS 'Laudo ou resumo do resultado.';
+COMMENT ON COLUMN tb_exame.arquivo_resultado      IS 'Caminho ou URL do arquivo do laudo.';
+
+COMMENT ON TABLE  tb_vacina_tratamento            IS 'Vacina, medicamento ou procedimento aplicado. Agenda automaticamente o lembrete da proxima dose.';
+COMMENT ON COLUMN tb_vacina_tratamento.id         IS 'Chave primaria. Gerada por sq_vacina_tratamento.';
+COMMENT ON COLUMN tb_vacina_tratamento.pet_id     IS 'FK para tb_pet: animal que recebeu a aplicacao.';
+COMMENT ON COLUMN tb_vacina_tratamento.veterinario_id IS 'FK para tb_veterinario: profissional que aplicou.';
+COMMENT ON COLUMN tb_vacina_tratamento.consulta_id IS 'FK para tb_consulta: atendimento em que houve a aplicacao. Opcional.';
+COMMENT ON COLUMN tb_vacina_tratamento.tipo       IS 'Natureza do registro: VACINA, MEDICAMENTO ou PROCEDIMENTO.';
+COMMENT ON COLUMN tb_vacina_tratamento.nome       IS 'Nome da vacina, do medicamento ou do procedimento.';
+COMMENT ON COLUMN tb_vacina_tratamento.dose       IS 'Dose aplicada, por exemplo primeira dose ou reforco.';
+COMMENT ON COLUMN tb_vacina_tratamento.data_aplicacao IS 'Data em que foi aplicada.';
+COMMENT ON COLUMN tb_vacina_tratamento.proxima_dose   IS 'Data da proxima dose. Preenchida, gera lembrete automatico para o tutor.';
+COMMENT ON COLUMN tb_vacina_tratamento.observacoes    IS 'Anotacoes do veterinario sobre a aplicacao.';
+
+COMMENT ON TABLE  tb_pedido_medico                IS 'Pedido de exame ou prescricao de medicamento emitido na consulta.';
+COMMENT ON COLUMN tb_pedido_medico.id             IS 'Chave primaria. Gerada por sq_pedido_medico.';
+COMMENT ON COLUMN tb_pedido_medico.consulta_id    IS 'FK para tb_consulta: atendimento que emitiu o pedido.';
+COMMENT ON COLUMN tb_pedido_medico.pet_id         IS 'FK para tb_pet: animal destinatario.';
+COMMENT ON COLUMN tb_pedido_medico.tipo           IS 'Natureza do pedido: EXAME ou MEDICAMENTO.';
+COMMENT ON COLUMN tb_pedido_medico.descricao      IS 'O que foi pedido ou prescrito.';
+COMMENT ON COLUMN tb_pedido_medico.instrucoes     IS 'Orientacoes ao tutor, como posologia ou preparo.';
+COMMENT ON COLUMN tb_pedido_medico.status         IS 'Situacao: PENDENTE, CONCLUIDO ou CANCELADO.';
+COMMENT ON COLUMN tb_pedido_medico.data_limite    IS 'Prazo para cumprir o pedido.';
+COMMENT ON COLUMN tb_pedido_medico.created_at     IS 'Data e hora da emissao.';
+
+-- --- Bem-estar: wearable de hidratacao --------------------------------
+COMMENT ON TABLE  tb_leitura_wearable             IS 'Leitura do wearable de hidratacao felina. Alimenta a verificacao diaria que dispara alerta ao tutor.';
+COMMENT ON COLUMN tb_leitura_wearable.id          IS 'Chave primaria. Gerada por sq_leitura_wearable.';
+COMMENT ON COLUMN tb_leitura_wearable.pet_id      IS 'FK para tb_pet: animal monitorado.';
+COMMENT ON COLUMN tb_leitura_wearable.timestamp   IS 'Momento exato da leitura enviada pelo dispositivo.';
+COMMENT ON COLUMN tb_leitura_wearable.consumo_ml_registrado    IS 'Volume ingerido nesta leitura, em mililitros.';
+COMMENT ON COLUMN tb_leitura_wearable.consumo_diario_acumulado IS 'Soma do consumo do dia ate esta leitura, em mililitros.';
+COMMENT ON COLUMN tb_leitura_wearable.meta_diaria_ml           IS 'Meta diaria de ingestao, calculada a partir do peso do animal.';
+COMMENT ON COLUMN tb_leitura_wearable.percentual_meta          IS 'Percentual da meta diaria ja atingido.';
+COMMENT ON COLUMN tb_leitura_wearable.alerta_gerado            IS 'Indica se esta leitura originou alerta: 1 sim, 0 nao.';
+COMMENT ON COLUMN tb_leitura_wearable.tipo_alerta              IS 'Classificacao do alerta: BAIXO_CONSUMO, DESIDRATACAO_CRITICA, META_ATINGIDA ou CONSUMO_EXCESSIVO.';
+COMMENT ON COLUMN tb_leitura_wearable.descricao_alerta         IS 'Mensagem do alerta enviada ao tutor.';
+
+-- --- Comunicacao com o tutor -----------------------------------------
+COMMENT ON TABLE  tb_lembrete                     IS 'Lembrete enviado ao tutor. Criado automaticamente por vacina, consulta, pedido medico ou alerta de hidratacao.';
+COMMENT ON COLUMN tb_lembrete.id                  IS 'Chave primaria. Gerada por sq_lembrete.';
+COMMENT ON COLUMN tb_lembrete.pet_id              IS 'FK para tb_pet: animal a que o lembrete se refere.';
+COMMENT ON COLUMN tb_lembrete.responsavel_id      IS 'FK para tb_responsavel: tutor que recebe o lembrete.';
+COMMENT ON COLUMN tb_lembrete.tipo                IS 'Origem do lembrete: VACINA, CONSULTA, EXAME, MEDICAMENTO ou HIDRATACAO.';
+COMMENT ON COLUMN tb_lembrete.mensagem            IS 'Texto apresentado ao tutor.';
+COMMENT ON COLUMN tb_lembrete.data_agendada       IS 'Data em que o lembrete deve ser entregue.';
+COMMENT ON COLUMN tb_lembrete.status              IS 'Situacao do envio: PENDENTE, ENVIADO ou FALHOU.';
+COMMENT ON COLUMN tb_lembrete.referencia_id       IS 'Id do registro que originou o lembrete.';
+COMMENT ON COLUMN tb_lembrete.referencia_tipo     IS 'Tabela de origem do lembrete, por exemplo Consulta ou LEITURA_WEARABLE.';
+COMMENT ON COLUMN tb_lembrete.created_at          IS 'Data e hora da criacao do lembrete.';
+
 COMMIT;
 EXIT;
