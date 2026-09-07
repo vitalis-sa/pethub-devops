@@ -245,9 +245,16 @@ O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas
 2. **Conexão ao Banco na Nuvem (via CLI)**: 
    - Para verificar o estado do banco diretamente na nuvem, você pode acessar o `sqlplus` por dentro do container ACI do Oracle usando o seguinte comando:
    ```bash
-   az container exec --resource-group rg-rm566234-challenge-sprint3 --name rm566234-aci-db --exec-command "bash -c 'sqlplus pethub/SUA_SENHA_AQUI@//localhost:1521/XEPDB1'"
+   az container exec --resource-group rg-rm566234-challenge-sprint3 --name rm566234-aci-db --exec-command "sqlplus pethub/SUA_SENHA_AQUI@//localhost:1521/XEPDB1"
    ```
    *(Substitua `SUA_SENHA_AQUI` pela senha configurada no arquivo `.env`)*
+
+   > **Nota:** não envolva o comando em `bash -c '...'`. O `az container exec` faz um
+   > split ingênuo do `--exec-command` por espaço (não interpreta aspas de shell), então
+   > `"bash -c 'sqlplus ...'"` vira os tokens `bash`, `-c`, `'sqlplus` e `...XEPDB1'`
+   > separados — o `bash -c` recebe só `'sqlplus` (aspa solta) como script inteiro e
+   > falha com `unexpected EOF while looking for matching `''`. Como a string de conexão
+   > não tem espaço, chamar o `sqlplus` direto funciona sem esse problema.
 
 3. **Preparação para Visualização (no SQLPlus)**: 
    - Para evitar que as tabelas fiquem desconfiguradas no terminal, execute as formatações básicas a seguir antes das consultas:
