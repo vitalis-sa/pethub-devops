@@ -289,4 +289,4 @@ O sistema suporta CRUD completo sobre **todas as 13 entidades**. As duas tabelas
    - Siga a mesma lógica na tabela `TB_CONSULTA` (vinculada à `TB_PET`).
    - Você pode validá-la com o comando: `SELECT id, pet_id, tipo, status, observacoes, data_hora FROM tb_consulta ORDER BY id;`.
    
-Este fluxo garante a demonstração clara de que a aplicação Containerizada e o Banco de Dados em Nuvem (ambos ACIs) comunicam-se adequadamente dentro da rede virtualizada da Azure.
+Este fluxo garante a demonstração clara de que a aplicação Containerizada e o Banco de Dados em Nuvem (ambos ACIs) comunicam-se adequadamente via FQDN público, dois ACIs distintos conforme a Opção 1 (ACR + ACI) do enunciado.

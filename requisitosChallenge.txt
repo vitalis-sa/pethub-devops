@@ -1,0 +1,143 @@
+DEVOPS TOOLS & CLOUD COMPUTING 1/7
+
+ENTREGA
+- 3o SPRINT
+
+Objetivo
+Nesta Sprint, sua equipe deve implementar uma solução baseada em uma das disciplinas a seguir: JAVA ADVANCED OU ADVANCED BUSINESS
+DEVELOPMENT WITH .NET
+
+A solução deve ser implementada junto com um banco de dados na nuvem
+Escolha uma das opções abaixo:
+Opção 1: ACR + ACI
+Utilize Azure Container Registry (ACR) para armazenar sua imagem Docker e Azure Container Instance (ACI) para executar o container. Ambos devem ser
+utilizados nessa opção. Solução containerizada completa: App e Banco
+Opção 2: Serviço de Aplicativo (App Service)
+Publique sua aplicação em um App Service na Azure, com o banco de dados também na nuvem - Aqui nada pode ser Containerizado
+
+DEVOPS TOOLS & CLOUD COMPUTING 2/7
+
+ENTREGA
+- 3o SPRINT
+
+Requisitos Obrigatórios
+
+ATENÇÃO: NÃO PODE MISTURAR AS OPÇÕES DE ESCOLHA: Ou ACR/ACI ou Serviços de Aplicativos com Banco PaaS
+-> Não será aceito Banco em Container com Serviço de Aplicativo ou ACI (App) com Banco PaaS por exemplo. Ou realiza a Containerização completa do
+App e Banco ou utilize Serviços de Aplicativos com os possíveis Bancos PaaS
+Sua entrega deve conter os itens abaixo, independentemente da opção escolhida:
+
+1. Descrição da Solução: explique brevemente o que a aplicação faz (inclua no README)
+2. Descrição dos Benefícios para o Negócio: explique quais problemas a solução resolve ou quais melhorias ela traz (inclua no README)
+3. Banco de Dados em Nuvem (obrigatório):
+3.1 Não será aceito o banco H2
+3.2 Serão aceitos Bancos em Containers na nuvem ou Bancos com serviços de PaaS. Por exemplo: Oracle (Container em Nuvem ou Banco da FIAP),
+MySQL, Azure SQL ou PostgreSQL
+3.3 Incluir o DDL das tabelas (tabelas, colunas, chave primária, comentários etc) criado em arquivo de texto separado com o nome: script_bd.sql com
+estrutura e comentários
+3.4 Utilize tabelas que representem o CORE da aplicação, nada de cadastro de cidade e estado, usuário e acesso etc. Utilize tabelas significativas para a
+solução
+
+DEVOPS TOOLS & CLOUD COMPUTING 3/7
+
+ENTREGA
+- 3o SPRINT
+
+4. Implementar um CRUD completo (Inclusão, Alteração, Exclusão e Consulta) sobre ao menos duas tabelas da aplicação relacionadas entre si
+5. Inserir e manipular pelo menos 2 linhas com conteúdo significativo nessas tabelas
+6. Código-fonte publicado no GitHub
+7. Arquivo PDF contendo:
+Nome completo e RM de todos os integrantes
+Link do repositório no GitHub
+Link do vídeo no Youtube
+Não pode ter mais nada no PDF, todo o resto é no GitHub
+8. Requisitos Específicos Por Tipo De Entrega
+Se escolher ACR + ACI:
+8.1. Todos os recursos (App e Banco de Dados) devem ser criados via Azure CLI
+8.2. O container do App não pode rodar como root ou admin (com privilégios administrativos)
+8.3. Pode usar Dockerfile ou Docker Compose
+8.4. Entregue todos os scripts do build e execução da imagem, como: Dockerfile, docker-compose.yml (se for o caso), Comandos utilizados: docker build,
+docker push, docker run etc. (README)
+
+DEVOPS TOOLS & CLOUD COMPUTING 4/7
+
+ENTREGA
+- 3o SPRINT
+
+Se escolher Serviço de Aplicativo (App Service):
+8.5. Todos os recursos (App e Banco de Dados) devem ser criados via Azure CLI
+8.6. Entregue todos os scripts dos recursos criados na Azure, como: Grupo de recurso, Plano do serviço, Serviço de aplicativo, Banco de dados e configurações
+adicionais
+
+9. Critérios de Avaliação (Pontuação)
+
+9.1. Desenho da arquitetura da solução proposta com fluxos, recursos e explicação do funcionamento, baseado na disciplina de DevOps Tools e Cloud Computing (até
+20 pontos)
+9.2 Vídeo Demonstrativo da Solução (até 80 pontos):
+Gravar um vídeo (mínimo 720p, com áudio claro e explicação por voz, sem uso de legendas nessa entrega) mostrando todo o funcionamento da solução, incluindo:
+• Mostrar criando os recursos na Azure
+• Clone do repositório no GitHub -> Obrigatório começar assim os testes da solução
+• Deploy da aplicação seguindo exatamente os passos descritos no README.md
+• Criação, configuração e testes do App e do Banco de Dados na nuvem seguindo exatamente os passos descritos no README.md
+• Sem cortes no vídeo quando estiver evidenciando os testes da solução e a persistência de dados
+
+DEVOPS TOOLS & CLOUD COMPUTING 5/7
+
+ENTREGA
+- 3o SPRINT
+
+9.3 Demonstração detalhada e individual de todas as operações do CRUD diretamente no Banco de Dados por SELECT:
+Inserção de um registro → exibir no banco
+Atualização do registro → exibir no banco
+Exclusão do registro → exibir no banco
+Consulta de registros
+Evidenciar claramente a integração total entre o App e o Banco em nuvem, com tudo funcionando 100%
+
+Observações:
+
+Não há limite de tempo para o vídeo, mas evite excesso de duração
+A apresentação deve ser clara, organizada e completa, evidenciando todas as etapas do processo
+Lembre-se: O vídeo é sua Prova entregue, deve estar impecável para uma nota máxima
+
+DEVOPS TOOLS & CLOUD COMPUTING 6/7
+
+ENTREGA
+- 3o SPRINT
+
+Penalidades (Descontos)
+Entrega em LOCALHOST: Não será possível a correção - Zero de nota
+Entrega fora da data e horário proposto no documento: Não será possível a correção - Zero de nota
+Professor sem acesso ao Repositório ou Vídeo - Não será possível a correção - Zero de nota
+Sem descrição da solução: -10 pontos
+Sem benefício para o negócio: -10 pontos
+Sem README.md com orientações de deploy/teste (How To): -30 pontos
+Sem evidência clara de cada operação CRUD no banco de dados: -30 pontos
+Vídeo com baixa qualidade ou sem explicação falada: -30 pontos
+Sem o código fonte: -40 pontos
+Sem o PDF com nome completo, RM e links: -30 pontos
+Não incluir o DDL das tabelas: -10 pontos
+Não inserir e manipular pelo menos 2 linhas com conteúdo significativo nas duas tabelas: -20 pontos
+Utilizar apenas uma tabela no CRUD: -20 pontos
+Utilizar tabelas que não fazem parte do CORE da solução: -30 pontos
+Misturar as opções de entrega: -40 pontos
+Deixar dados sensíveis expostos (usuário, senha e tokens por exemplo) no código fonte: -20 pontos
+Desenho de arquitetura parecido com Fluxo, Togaf, UML não será aceito: -20 pontos
+Utilizar um banco não permitido (vide lista): -40 pontos
+
+DEVOPS TOOLS & CLOUD COMPUTING 7/7
+
+ENTREGA
+- 3o SPRINT
+
+Para opção ACR + ACI:
+Recursos não criados via CLI: -30 pontos
+Container doa App com privilégio admin: -10 pontos
+Script faltando: -10 pontos por script
+Banco não Containerizado: -40 pontos
+App não Containerizado: -40 pontos
+
+Para opção Serviços de Aplicativos e Banco PaaS:
+Recursos não criados via CLI: -30 pontos
+Script faltando: -10 pontos por script
+Banco Containerizado: -40 pontos
+App Containerizado: -40 pontos
