@@ -17,7 +17,7 @@ Este repositório contém a **entrega de DevOps Tools & Cloud Computing — Spri
 | RM561342 | Lucas Figueiredo Vieira | 2TDSPV |
 
 - **Repositório GitHub**: https://github.com/vitalis-sa/pethub-devops
-- **Vídeo no YouTube**: *(preencher após gravar)*
+- **Vídeo no YouTube**: https://www.youtube.com/watch?v=ARD3ANKwrN4
 
 ---
 
