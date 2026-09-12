@@ -72,4 +72,5 @@ echo
 echo "Acompanhe a subida do Spring Boot com:"
 echo "  az container logs -g ${RESOURCE_GROUP} -n ${ACI_APP} --follow"
 echo
-echo "Roteiro do CRUD com evidencia no banco: docs/roteiro-video.md"
+echo "Roteiro do CRUD com evidencia no banco: secao 'Como testar as operacoes"
+echo "CRUD na database' do README.md"

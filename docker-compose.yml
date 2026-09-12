@@ -54,7 +54,7 @@ services:
       SHOW_SQL: ${SPRING_SHOW_SQL:-true}
       DB_POOL_MAX: ${SPRING_POOL_MAX:-10}
       DB_POOL_MIN: ${SPRING_POOL_MIN:-2}
-      JWT_SECRET: ${JWT_SECRET:-segredo-local-de-desenvolvimento-com-256-bits-no-minimo-ok}
+      JWT_SECRET: ${JWT_SECRET}
     restart: unless-stopped
 
 volumes:

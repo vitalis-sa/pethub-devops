@@ -46,6 +46,11 @@ O **PetHub** centraliza o ecossistema de clínicas veterinárias, tutores, pets,
 
 ## 🏗️ Arquitetura da Solução (Nuvem)
 
+![Arquitetura da solução: ACR + dois ACIs (app e banco) + Storage Account com File Share](./docs/arquitetura.jpg)
+
+<details>
+<summary>Versão em texto (ASCII)</summary>
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
 │                        AZURE CLOUD                                   │
@@ -75,6 +80,8 @@ O **PetHub** centraliza o ecossistema de clínicas veterinárias, tutores, pets,
 │                                    └──────────────────┘             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
+
+</details>
 
 > Dois ACIs distintos conversando entre si via FQDN público. O File Share persiste os dados do Oracle entre reinicializações.
 
@@ -174,6 +181,7 @@ bash ./azure/99-cleanup.sh
 | [`.env.example`](./.env.example) | Exemplo de configuração. **Nenhuma credencial real no código.** |
 | [`docs/entrega-devops-sprint3.pdf`](./docs/entrega-devops-sprint3.pdf) | PDF da entrega: integrantes com RM, link do repositório e link do vídeo. |
 | [`docs/folha-de-rosto.html`](./docs/folha-de-rosto.html) | Fonte do PDF acima. Regerar após publicar o vídeo (comando no topo do arquivo). |
+| [`docs/arquitetura.jpg`](./docs/arquitetura.jpg) | Desenho da arquitetura de infraestrutura (ACR, ACIs, Storage Account) usado na seção acima. |
 
 ---
 
