@@ -48,41 +48,6 @@ O **PetHub** centraliza o ecossistema de clínicas veterinárias, tutores, pets,
 
 ![Arquitetura da solução: ACR + dois ACIs (app e banco) + Storage Account com File Share](./docs/arquitetura.jpg)
 
-<details>
-<summary>Versão em texto (ASCII)</summary>
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        AZURE CLOUD                                   │
-│                                                                      │
-│  ┌──────────────────┐    docker push     ┌────────────────────────┐  │
-│  │   Desenvolvedor   │ ──────────────────▶│  Azure Container       │  │
-│  │  (Git Bash / CLI) │                    │  Registry (ACR)        │  │
-│  └──────────────────┘                    │  acrrm566234challenge  │  │
-│                                          │  ┌─────────┐ ┌───────┐ │  │
-│                                          │  │ app:v1  │ │ db:v1 │ │  │
-│                                          │  └─────────┘ └───────┘ │  │
-│                                          └────────────────────────┘  │
-│                                             │ pull          │ pull   │
-│                                             ▼               ▼        │
-│  ┌──────────────────────────┐   ┌──────────────────────────────┐    │
-│  │  ACI - App (pethub-app)  │   │  ACI - Banco (pethub-oracle) │    │
-│  │  Spring Boot 4.0 / JRE21 │   │  Oracle XE 21c               │    │
-│  │  USER: springuser (1001) │   │  USER: oracle (54321)        │    │
-│  │  Porta: 8080             │──▶│  Porta: 1521                 │    │
-│  │  CPU: 1 | RAM: 1.5 GB   │   │  CPU: 2 | RAM: 4 GB          │    │
-│  └──────────────────────────┘   └──────────┬───────────────────┘    │
-│                                             │ mount                  │
-│                                    ┌────────▼─────────┐             │
-│                                    │ Storage Account   │             │
-│                                    │ File Share:oradata │             │
-│                                    │ (persistência)    │             │
-│                                    └──────────────────┘             │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
-</details>
-
 > Dois ACIs distintos conversando entre si via FQDN público. O File Share persiste os dados do Oracle entre reinicializações.
 
 ---
@@ -153,7 +118,7 @@ Após o passo 5, o script exibirá a URL:
 http://rm566234-pethub-app.canadacentral.azurecontainer.io:8080/swagger-ui.html
 ```
 
-### 6. Limpeza (após gravar o vídeo)
+### 6. Limpeza (Opcional)
 
 ```bash
 bash ./azure/99-cleanup.sh
@@ -180,7 +145,6 @@ bash ./azure/99-cleanup.sh
 | [`azure/99-cleanup.sh`](./azure/99-cleanup.sh) | Destrói todo o Resource Group (pós-vídeo). |
 | [`.env.example`](./.env.example) | Exemplo de configuração. **Nenhuma credencial real no código.** |
 | [`docs/entrega-devops-sprint3.pdf`](./docs/entrega-devops-sprint3.pdf) | PDF da entrega: integrantes com RM, link do repositório e link do vídeo. |
-| [`docs/folha-de-rosto.html`](./docs/folha-de-rosto.html) | Fonte do PDF acima. Regerar após publicar o vídeo (comando no topo do arquivo). |
 | [`docs/arquitetura.jpg`](./docs/arquitetura.jpg) | Desenho da arquitetura de infraestrutura (ACR, ACIs, Storage Account) usado na seção acima. |
 
 ---
